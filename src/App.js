@@ -1,24 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import AddTodo from "./components/AddTodo";
+import TaskList from "./components/TaskList";
 
 function App() {
+  let nextId = 3;
+  const initialTodos = [
+    { id: 0, title: "Buy milk", done: true },
+    { id: 1, title: "Eat tacos", done: false },
+    { id: 2, title: "Brew tea", done: false },
+  ];
+
+  const [todos, setTodos] = useState(initialTodos);
+
+  const handleAddTodo = (title) => {
+    setTodos([...todos, { id: nextId++, title: title, done: false }]);
+  };
+
+  const handleChangeTodo = (nextTodo) => {
+    setTodos(
+      todos.map((t) => {
+        if (t.id === nextTodo.id) {
+          return nextTodo;
+        } else {
+          return t;
+        }
+      })
+    );
+  };
+  const handleDeleteTodo = (todoId) => {
+    setTodos(todos.filter((t) => t.id !== todoId));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <AddTodo onAddTodo={handleAddTodo} />
+      <TaskList
+        todos={todos}
+        onChangeTodo={handleChangeTodo}
+        onDeleteTodo={handleDeleteTodo}
+      />
+    </>
   );
 }
 
